@@ -16,6 +16,19 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
+<?php // Decorative background layers: gradient blobs, grid, film grain. Purely visual. ?>
+<div class="bg-decor" aria-hidden="true">
+	<div class="bg-blob bg-blob--1" data-parallax="0.12"></div>
+	<div class="bg-blob bg-blob--2" data-parallax="-0.08"></div>
+	<div class="bg-blob bg-blob--3" data-parallax="0.05"></div>
+	<div class="bg-grid"></div>
+	<div class="bg-noise"></div>
+</div>
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
 <header class="site-header sticky-top">
 	<nav class="navbar navbar-expand-md" aria-label="Primary">
 		<div class="container">
@@ -48,10 +61,13 @@
 						)
 					);
 					?>
+					<a class="btn btn-primary btn-sm site-header__cta ms-md-3" href="<?php echo esc_url( dev_card_page_url( 'contacts' ) ); ?>" data-magnetic>
+						Let's talk <span aria-hidden="true">&nearr;</span>
+					</a>
 				</div>
 			<?php endif; ?>
 		</div>
 	</nav>
 </header>
 
-<main class="site-main">
+<main class="site-main" id="main">

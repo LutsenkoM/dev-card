@@ -20,16 +20,16 @@ while ( have_posts() ) :
 
 		<div class="container py-5">
 			<?php if ( get_the_content() ) : ?>
-				<div class="entry-content mb-5">
+				<div class="entry-content mb-5 reveal">
 					<?php the_content(); ?>
 				</div>
 			<?php endif; ?>
 
-			<div class="row g-4">
+			<div class="row g-4" data-stagger>
 				<?php foreach ( $dev_card_skill_groups as $group => $skills ) : ?>
 					<?php $is_core = ( array_key_first( $dev_card_skill_groups ) === $group ); ?>
 					<div class="<?php echo esc_attr( $is_core ? 'col-12' : 'col-md-6 col-lg-4' ); ?>">
-						<section class="card card-dev h-100<?php echo $is_core ? ' skill-group--core' : ''; ?>">
+						<section class="card card-dev spotlight reveal h-100<?php echo $is_core ? ' skill-group--core' : ''; ?>">
 							<div class="card-body p-4">
 								<h2 class="h5 skill-group__title"><?php echo esc_html( $group ); ?></h2>
 

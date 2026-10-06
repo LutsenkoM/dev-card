@@ -28,11 +28,11 @@ while ( have_posts() ) :
 		<div class="container py-5">
 			<div class="row g-5">
 				<div class="col-lg-5">
-					<div class="entry-content mb-4">
+					<div class="entry-content mb-4 reveal">
 						<?php the_content(); ?>
 					</div>
 
-					<ul class="contact-list">
+					<ul class="contact-list reveal">
 						<?php if ( $dev_card_email ) : ?>
 							<li>
 								<span class="contact-list__label">Email</span>
@@ -71,7 +71,7 @@ while ( have_posts() ) :
 
 				<div class="col-lg-7">
 					<?php $dev_card_form = dev_card_get_contact_form_state(); ?>
-					<div class="card card-dev" id="contact-form">
+					<div class="card card-dev card-form spotlight reveal" id="contact-form">
 						<div class="card-body p-4 p-lg-5">
 							<h2 class="h4 mb-4">Send a message</h2>
 

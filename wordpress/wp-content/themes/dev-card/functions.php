@@ -61,11 +61,12 @@ function dev_card_enqueue_assets() {
 	$theme_dir       = get_template_directory();
 	$bootstrap_ver   = '5.3.8';
 	$main_css_path   = '/assets/css/main.css';
+	$main_js_path    = '/assets/js/main.js';
 
-	// Google Fonts: Inter for text, JetBrains Mono for "code" accents.
+	// Google Fonts: Bricolage Grotesque for headings, Geist for text, Geist Mono for "code" accents.
 	wp_enqueue_style(
 		'dev-card-fonts',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap',
+		'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap',
 		array(),
 		null // No ?ver= — Google Fonts URLs must stay as is.
 	);
@@ -98,8 +99,31 @@ function dev_card_enqueue_assets() {
 			'strategy'  => 'defer',
 		)
 	);
+
+	// Theme effects: parallax, scroll reveal, spotlight, tilt. No dependencies.
+	wp_enqueue_script(
+		'dev-card-main',
+		$theme_uri . $main_js_path,
+		array(),
+		filemtime( $theme_dir . $main_js_path ),
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'dev_card_enqueue_assets' );
+
+/**
+ * Mark the page as "JS enabled" as early as possible.
+ *
+ * Runs in <head> before any content is painted, so CSS can hide elements
+ * that will be revealed on scroll without a flash of visible content.
+ */
+function dev_card_js_detection() {
+	wp_print_inline_script_tag( "document.documentElement.classList.add('js');" );
+}
+add_action( 'wp_head', 'dev_card_js_detection', 0 );
 
 /**
  * Add Bootstrap's `nav-item` class to menu <li> elements.

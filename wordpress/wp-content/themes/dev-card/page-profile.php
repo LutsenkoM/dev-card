@@ -25,7 +25,7 @@ while ( have_posts() ) :
 		<div class="container py-5">
 			<div class="row g-5">
 				<aside class="col-lg-4">
-					<div class="profile-card">
+					<div class="profile-card spotlight reveal">
 						<?php if ( has_post_thumbnail() ) : ?>
 							<?php the_post_thumbnail( 'medium_large', array( 'class' => 'profile-card__photo' ) ); ?>
 						<?php else : ?>
@@ -60,15 +60,15 @@ while ( have_posts() ) :
 				</aside>
 
 				<div class="col-lg-8">
-					<div class="entry-content">
+					<div class="entry-content reveal">
 						<?php the_content(); ?>
 					</div>
 
 					<?php if ( $dev_card_experience ) : ?>
-						<h2 class="section-title mt-5">Experience</h2>
-						<ol class="timeline">
+						<h2 class="section-title mt-5 reveal">Experience</h2>
+						<ol class="timeline" data-stagger>
 							<?php foreach ( $dev_card_experience as $job ) : ?>
-								<li class="timeline__item">
+								<li class="timeline__item reveal">
 									<p class="timeline__period"><?php echo esc_html( $job['period'] ); ?></p>
 									<h3 class="timeline__role">
 										<?php echo esc_html( $job['title'] ); ?>
@@ -85,10 +85,10 @@ while ( have_posts() ) :
 					<?php endif; ?>
 
 					<?php if ( $dev_card_education ) : ?>
-						<h2 class="section-title mt-4">Education</h2>
-						<ol class="timeline">
+						<h2 class="section-title mt-4 reveal">Education</h2>
+						<ol class="timeline" data-stagger>
 							<?php foreach ( $dev_card_education as $study ) : ?>
-								<li class="timeline__item">
+								<li class="timeline__item reveal">
 									<p class="timeline__period"><?php echo esc_html( $study['period'] ); ?></p>
 									<h3 class="timeline__role"><?php echo esc_html( $study['title'] ); ?></h3>
 									<p class="timeline__text"><?php echo esc_html( $study['school'] ); ?></p>
