@@ -8,24 +8,14 @@
 
 get_header();
 
-// Temporary hardcoded data. Will be moved to the admin panel in step 7.
-$dev_card_highlights = array(
-	array(
-		'slug'  => 'profile',
-		'title' => 'Profile',
-		'text'  => 'Who I am, my background and the experience behind my work.',
-	),
-	array(
-		'slug'  => 'skills',
-		'title' => 'Skills',
-		'text'  => 'Languages, frameworks and tools I use to build things.',
-	),
-	array(
-		'slug'  => 'contacts',
-		'title' => 'Contacts',
-		'text'  => 'Have a project or a question? Let\'s get in touch.',
-	),
-);
+// Cards link to these pages; titles and texts (page excerpts) are edited in Pages.
+$dev_card_highlights = array_filter( array_map( 'get_page_by_path', array( 'profile', 'skills', 'contacts' ) ) );
+
+// "Code window" values are collected from data managed elsewhere in the admin.
+$dev_card_skill_groups = dev_card_get_skills_by_group();
+$dev_card_stack        = array_slice( (array) reset( $dev_card_skill_groups ), 0, 3 ); // First 3 core skills.
+$dev_card_experience   = dev_card_get_profile_facts()['Experience'] ?? '';
+$dev_card_location     = dev_card_get_contact( 'location' );
 
 while ( have_posts() ) :
 	the_post();
@@ -63,11 +53,16 @@ while ( have_posts() ) :
 						</div>
 <pre class="code-window__body"><code><span class="tok-key">const</span> developer = {
   name: <span class="tok-str">'<?php echo esc_html( get_bloginfo( 'name' ) ); ?>'</span>,
-  stack: [<span class="tok-str">'React'</span>, <span class="tok-str">'TypeScript'</span>, <span class="tok-str">'Next.js'</span>],
-  experience: <span class="tok-str">'8+ years'</span>,
-  location: <span class="tok-str">'Krakow, PL'</span>,
+<?php if ( $dev_card_stack ) : ?>
+  stack: [<?php echo implode( ', ', array_map( static fn( $skill ) => '<span class="tok-str">\'' . esc_html( $skill ) . '\'</span>', $dev_card_stack ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside. ?>],
+<?php endif; ?>
+<?php if ( $dev_card_experience ) : ?>
+  experience: <span class="tok-str">'<?php echo esc_html( $dev_card_experience ); ?>'</span>,
+<?php endif; ?>
+<?php if ( $dev_card_location ) : ?>
+  location: <span class="tok-str">'<?php echo esc_html( $dev_card_location ); ?>'</span>,
+<?php endif; ?>
   coffee: <span class="tok-num">Infinity</span>,
-  available: <span class="tok-key">true</span>,
 };</code></pre>
 					</div>
 				</div>
@@ -78,13 +73,15 @@ while ( have_posts() ) :
 	<section class="home-links py-5">
 		<div class="container">
 			<div class="row g-4">
-				<?php foreach ( $dev_card_highlights as $index => $item ) : ?>
+				<?php foreach ( array_values( $dev_card_highlights ) as $index => $highlight ) : ?>
 					<div class="col-md-4">
-						<a class="card card-dev h-100 home-link" href="<?php echo esc_url( dev_card_page_url( $item['slug'] ) ); ?>">
+						<a class="card card-dev h-100 home-link" href="<?php echo esc_url( get_permalink( $highlight ) ); ?>">
 							<div class="card-body p-4">
 								<p class="card-dev__meta"><?php echo esc_html( sprintf( '%02d', $index + 1 ) ); ?></p>
-								<h2 class="h4 card-title"><?php echo esc_html( $item['title'] ); ?> <span class="home-link__arrow">&rarr;</span></h2>
-								<p class="card-text text-secondary mb-0"><?php echo esc_html( $item['text'] ); ?></p>
+								<h2 class="h4 card-title"><?php echo esc_html( get_the_title( $highlight ) ); ?> <span class="home-link__arrow">&rarr;</span></h2>
+								<?php if ( has_excerpt( $highlight ) ) : ?>
+									<p class="card-text text-secondary mb-0"><?php echo esc_html( get_the_excerpt( $highlight ) ); ?></p>
+								<?php endif; ?>
 							</div>
 						</a>
 					</div>

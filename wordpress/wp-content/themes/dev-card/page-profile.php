@@ -7,20 +7,9 @@
 
 get_header();
 
-// Temporary hardcoded data. Will be moved to a meta box in step 7.4.
-$dev_card_facts = array(
-	'Location'   => 'Krakow, Poland',
-	'Experience' => '8+ years',
-	'Focus'      => 'React · Next.js · TS',
-	'Work'       => 'Remote / hybrid / on-site',
-	'Status'     => 'Available immediately',
-);
-
-$dev_card_languages = array(
-	'English'   => 'B2',
-	'Polish'    => 'A2',
-	'Ukrainian' => 'Native',
-);
+// Managed in the admin: Pages -> Profile -> "Profile details" box (see inc/meta-boxes.php).
+$dev_card_facts     = dev_card_parse_pairs( get_post_meta( get_queried_object_id(), '_dc_facts', true ) );
+$dev_card_languages = dev_card_parse_pairs( get_post_meta( get_queried_object_id(), '_dc_languages', true ) );
 
 // Managed in the admin: Experience / Education menus (see inc/post-types.php, inc/meta-boxes.php).
 $dev_card_experience = dev_card_get_entries( 'dc_experience' );
@@ -45,24 +34,28 @@ while ( have_posts() ) :
 							</div>
 						<?php endif; ?>
 
-						<dl class="profile-card__facts">
-							<?php foreach ( $dev_card_facts as $label => $value ) : ?>
-								<div>
-									<dt><?php echo esc_html( $label ); ?></dt>
-									<dd><?php echo esc_html( $value ); ?></dd>
-								</div>
-							<?php endforeach; ?>
-						</dl>
+						<?php if ( $dev_card_facts ) : ?>
+							<dl class="profile-card__facts">
+								<?php foreach ( $dev_card_facts as $label => $value ) : ?>
+									<div>
+										<dt><?php echo esc_html( $label ); ?></dt>
+										<dd><?php echo esc_html( $value ); ?></dd>
+									</div>
+								<?php endforeach; ?>
+							</dl>
+						<?php endif; ?>
 
-						<h2 class="profile-card__subtitle">Languages</h2>
-						<dl class="profile-card__facts">
-							<?php foreach ( $dev_card_languages as $language => $level ) : ?>
-								<div>
-									<dt><?php echo esc_html( $language ); ?></dt>
-									<dd><?php echo esc_html( $level ); ?></dd>
-								</div>
-							<?php endforeach; ?>
-						</dl>
+						<?php if ( $dev_card_languages ) : ?>
+							<h2 class="profile-card__subtitle">Languages</h2>
+							<dl class="profile-card__facts">
+								<?php foreach ( $dev_card_languages as $language => $level ) : ?>
+									<div>
+										<dt><?php echo esc_html( $language ); ?></dt>
+										<dd><?php echo esc_html( $level ); ?></dd>
+									</div>
+								<?php endforeach; ?>
+							</dl>
+						<?php endif; ?>
 					</div>
 				</aside>
 

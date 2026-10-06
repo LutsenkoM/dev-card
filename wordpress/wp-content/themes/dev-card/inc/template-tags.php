@@ -109,3 +109,14 @@ function dev_card_get_entries( $post_type ) {
 
 	return $entries;
 }
+
+/**
+ * Get the facts from the Profile page ("Profile details" box) as label => value.
+ *
+ * @return array<string, string>
+ */
+function dev_card_get_profile_facts() {
+	$page = get_page_by_path( 'profile' );
+
+	return $page ? dev_card_parse_pairs( get_post_meta( $page->ID, '_dc_facts', true ) ) : array();
+}

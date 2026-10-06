@@ -53,7 +53,60 @@ function dev_card_meta_box_config() {
 				),
 			),
 		),
+		'page'          => array(
+			'title'     => 'Profile details',
+			// Show this box only on the Profile page, not on every page.
+			'condition' => static function ( $post ) {
+				return 'profile' === $post->post_name;
+			},
+			'fields'    => array(
+				'_dc_facts'     => array(
+					'label'       => 'Facts (sidebar card)',
+					'type'        => 'pairs',
+					'placeholder' => "Location: Krakow, Poland\nExperience: 8+ years",
+				),
+				'_dc_languages' => array(
+					'label'       => 'Languages',
+					'type'        => 'pairs',
+					'placeholder' => "English: B2\nUkrainian: Native",
+				),
+			),
+		),
 	);
+}
+
+/**
+ * Check whether a meta box config applies to the given post.
+ *
+ * @param array   $box  One entry of dev_card_meta_box_config().
+ * @param WP_Post $post Post being edited or saved.
+ * @return bool
+ */
+function dev_card_meta_box_applies( $box, $post ) {
+	return ! isset( $box['condition'] ) || call_user_func( $box['condition'], $post );
+}
+
+/**
+ * Parse "Label: Value" lines into an array.
+ *
+ * Splits each line at the first colon, so values may contain colons too.
+ * Lines without a colon or with an empty part are skipped.
+ *
+ * @param string $text Multiline text, e.g. "English: B2\nPolish: A2".
+ * @return array<string, string> Label => value, e.g. [ 'English' => 'B2', 'Polish' => 'A2' ].
+ */
+function dev_card_parse_pairs( $text ) {
+	$pairs = array();
+
+	foreach ( preg_split( '/\R/', (string) $text ) as $line ) {
+		$parts = array_map( 'trim', explode( ':', $line, 2 ) );
+
+		if ( 2 === count( $parts ) && '' !== $parts[0] && '' !== $parts[1] ) {
+			$pairs[ $parts[0] ] = $parts[1];
+		}
+	}
+
+	return $pairs;
 }
 
 /**
@@ -71,7 +124,8 @@ function dev_card_register_meta() {
 					'single'            => true,
 					'default'           => '',
 					'show_in_rest'      => true,
-					'sanitize_callback' => 'textarea' === $field['type'] ? 'sanitize_textarea_field' : 'sanitize_text_field',
+					// Multiline fields keep line breaks, single-line fields don't.
+					'sanitize_callback' => 'text' === $field['type'] ? 'sanitize_text_field' : 'sanitize_textarea_field',
 					// Protected ("_") keys need an explicit permission check to be editable via REST.
 					'auth_callback'     => static function () {
 						return current_user_can( 'edit_posts' );
@@ -85,9 +139,16 @@ add_action( 'init', 'dev_card_register_meta' );
 
 /**
  * Add a meta box to every post type from the config.
+ *
+ * @param string  $post_type Post type of the edited post.
+ * @param WP_Post $post      Edited post.
  */
-function dev_card_add_meta_boxes() {
-	foreach ( dev_card_meta_box_config() as $post_type => $box ) {
+function dev_card_add_meta_boxes( $post_type, $post ) {
+	foreach ( dev_card_meta_box_config() as $box_post_type => $box ) {
+		if ( $box_post_type !== $post_type || ! dev_card_meta_box_applies( $box, $post ) ) {
+			continue;
+		}
+
 		add_meta_box(
 			'dev_card_details',          // HTML id of the box.
 			$box['title'],               // Box title.
@@ -99,7 +160,7 @@ function dev_card_add_meta_boxes() {
 		);
 	}
 }
-add_action( 'add_meta_boxes', 'dev_card_add_meta_boxes' );
+add_action( 'add_meta_boxes', 'dev_card_add_meta_boxes', 10, 2 );
 
 /**
  * Print the meta box fields.
@@ -119,7 +180,16 @@ function dev_card_render_meta_box( $post, $box ) {
 
 		printf( '<p><label for="%1$s"><strong>%2$s</strong></label><br>', esc_attr( $key ), esc_html( $field['label'] ) );
 
-		if ( 'textarea' === $field['type'] ) {
+		if ( 'pairs' === $field['type'] ) {
+			// "Label: Value" per line — a simple repeater without JavaScript.
+			printf(
+				'<textarea id="%1$s" name="%1$s" rows="6" class="widefat code" placeholder="%3$s">%2$s</textarea>
+				<span class="description">One item per line: <code>Label: Value</code></span>',
+				esc_attr( $key ),
+				esc_textarea( $value ),
+				esc_attr( $placeholder )
+			);
+		} elseif ( 'textarea' === $field['type'] ) {
 			printf(
 				'<textarea id="%1$s" name="%1$s" rows="4" class="widefat">%2$s</textarea>',
 				esc_attr( $key ),
@@ -162,7 +232,7 @@ function dev_card_save_meta_box( $post_id ) {
 	}
 
 	$config = dev_card_meta_box_config()[ get_post_type( $post_id ) ] ?? null;
-	if ( ! $config ) {
+	if ( ! $config || ! dev_card_meta_box_applies( $config, get_post( $post_id ) ) ) {
 		return;
 	}
 
@@ -184,3 +254,4 @@ function dev_card_save_meta_box( $post_id ) {
 }
 add_action( 'save_post_dc_experience', 'dev_card_save_meta_box' );
 add_action( 'save_post_dc_education', 'dev_card_save_meta_box' );
+add_action( 'save_post_page', 'dev_card_save_meta_box' );

@@ -40,6 +40,9 @@ function dev_card_setup() {
 		)
 	);
 
+	// Pages get an "Excerpt" field: used as card text on the front page.
+	add_post_type_support( 'page', 'excerpt' );
+
 	// Register menu locations. Menus are assigned to them in Appearance -> Menus.
 	register_nav_menus(
 		array(
