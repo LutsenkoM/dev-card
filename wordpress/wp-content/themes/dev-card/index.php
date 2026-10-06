@@ -2,31 +2,22 @@
 /**
  * Main (fallback) template of the theme.
  * WordPress uses it when no more specific template is found.
+ *
+ * @package Dev_Card
  */
+
+get_header();
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class(); ?>>
-<?php wp_body_open(); ?>
 
-<main>
-	<?php if ( have_posts() ) : ?>
-		<?php while ( have_posts() ) : the_post(); ?>
-			<article>
-				<h1><?php the_title(); ?></h1>
-				<?php the_content(); ?>
-			</article>
-		<?php endwhile; ?>
-	<?php else : ?>
-		<p>Nothing found.</p>
-	<?php endif; ?>
-</main>
+<?php if ( have_posts() ) : ?>
+	<?php while ( have_posts() ) : the_post(); ?>
+		<?php get_template_part( 'template-parts/content' ); ?>
+	<?php endwhile; ?>
 
-<?php wp_footer(); ?>
-</body>
-</html>
+	<?php the_posts_pagination(); ?>
+<?php else : ?>
+	<p>Nothing found.</p>
+<?php endif; ?>
+
+<?php
+get_footer();
