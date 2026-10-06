@@ -131,3 +131,18 @@ function dev_card_nav_menu_link_attributes( $atts, $item, $args ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'dev_card_nav_menu_link_attributes', 10, 3 );
+
+/**
+ * Get the URL of a page by its slug.
+ *
+ * Templates link to each other through this helper instead of hardcoded URLs,
+ * so links keep working if the domain or permalink structure changes.
+ *
+ * @param string $slug Page slug, e.g. 'profile'.
+ * @return string Page URL, or the home URL if the page does not exist.
+ */
+function dev_card_page_url( $slug ) {
+	$page = get_page_by_path( $slug );
+
+	return $page ? get_permalink( $page ) : home_url( '/' );
+}
