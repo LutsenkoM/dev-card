@@ -92,6 +92,45 @@ function dev_card_customize_register( $wp_customize ) {
 add_action( 'customize_register', 'dev_card_customize_register' );
 
 /**
+ * "SEO & Sharing" section: default image for link previews in social networks.
+ *
+ * @param WP_Customize_Manager $wp_customize Customizer manager instance.
+ */
+function dev_card_customize_register_seo( $wp_customize ) {
+	$wp_customize->add_section(
+		'dev_card_seo',
+		array(
+			'title'       => 'SEO & Sharing',
+			'description' => 'Image shown when a link to the site is shared (LinkedIn, Telegram, Slack...). Recommended size: 1200×630. Used when the page has no featured image.',
+			'priority'    => 31,
+		)
+	);
+
+	// Media control stores the attachment ID, so absint() is the right sanitizer.
+	$wp_customize->add_setting(
+		'dev_card_og_image',
+		array(
+			'type'              => 'theme_mod',
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			'dev_card_og_image',
+			array(
+				'label'     => 'Sharing image',
+				'section'   => 'dev_card_seo',
+				'mime_type' => 'image',
+			)
+		)
+	);
+}
+add_action( 'customize_register', 'dev_card_customize_register_seo' );
+
+/**
  * Get a contact value saved in the Customizer.
  *
  * @param string $key Field key from dev_card_contact_fields(), e.g. 'email'.

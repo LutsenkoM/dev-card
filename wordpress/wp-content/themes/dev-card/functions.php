@@ -183,3 +183,4 @@ require get_template_directory() . '/inc/meta-boxes.php';
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/mail.php';
 require get_template_directory() . '/inc/contact-form.php';
+require get_template_directory() . '/inc/seo.php';
