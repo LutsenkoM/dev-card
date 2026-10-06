@@ -12,3 +12,7 @@
 !/wordpress/wp-content/themes/
 /wordpress/wp-content/themes/*
 !/wordpress/wp-content/themes/dev-card/
+
+# Personal documents (CV etc.) — never commit
+*.pdf
+*.docx

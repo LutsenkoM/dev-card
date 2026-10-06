@@ -63,7 +63,9 @@ while ( have_posts() ) :
 						</div>
 <pre class="code-window__body"><code><span class="tok-key">const</span> developer = {
   name: <span class="tok-str">'<?php echo esc_html( get_bloginfo( 'name' ) ); ?>'</span>,
-  stack: [<span class="tok-str">'PHP'</span>, <span class="tok-str">'WordPress'</span>, <span class="tok-str">'JS'</span>],
+  stack: [<span class="tok-str">'React'</span>, <span class="tok-str">'TypeScript'</span>, <span class="tok-str">'Next.js'</span>],
+  experience: <span class="tok-str">'8+ years'</span>,
+  location: <span class="tok-str">'Krakow, PL'</span>,
   coffee: <span class="tok-num">Infinity</span>,
   available: <span class="tok-key">true</span>,
 };</code></pre>

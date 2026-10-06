@@ -8,26 +8,15 @@
 get_header();
 
 // Temporary hardcoded data. Will be moved to the admin panel in step 7.
-// Format: group => [ skill name => level in percent ].
+// Format: group => list of skills. The first group is highlighted as the core stack.
 $dev_card_skill_groups = array(
-	'Backend'  => array(
-		'PHP'       => 90,
-		'WordPress' => 85,
-		'MySQL'     => 75,
-		'REST API'  => 80,
-	),
-	'Frontend' => array(
-		'HTML & CSS' => 90,
-		'JavaScript' => 80,
-		'React'      => 65,
-		'Bootstrap'  => 85,
-	),
-	'Tools'    => array(
-		'Git'      => 85,
-		'Docker'   => 70,
-		'Linux'    => 70,
-		'PhpStorm' => 90,
-	),
+	'Core'                 => array( 'React', 'TypeScript', 'JavaScript (ES6+)', 'Next.js (App Router)', 'HTML5', 'CSS3' ),
+	'Data & State'         => array( 'GraphQL (Apollo Client)', 'REST', 'WebSocket', 'SignalR', 'Redux Toolkit', 'React Query', 'Zustand', 'React Hook Form', 'Caching strategies' ),
+	'UI & Accessibility'   => array( 'Tailwind CSS', 'Material UI', 'SASS', 'CSS Grid & Flexbox', 'Design systems', 'Responsive layouts', 'Semantic HTML', 'ARIA', 'WCAG' ),
+	'Testing & Tooling'    => array( 'Jest', 'React Testing Library', 'Cypress', 'Vite', 'webpack', 'Turbo', 'pnpm monorepo', 'Storybook', 'ESLint', 'Prettier' ),
+	'AI Tools'             => array( 'Claude Code', 'GitHub Copilot', 'Codex' ),
+	'Cloud & Workflow'     => array( 'GCP', 'Firebase', 'Git (GitLab / Bitbucket / GitHub)', 'Azure DevOps', 'Jira', 'Figma', 'Agile / Scrum', 'Code review' ),
+	'Also'                 => array( 'Angular / AngularJS', 'Node.js', 'WordPress', 'Drupal' ),
 );
 
 while ( have_posts() ) :
@@ -46,22 +35,17 @@ while ( have_posts() ) :
 
 			<div class="row g-4">
 				<?php foreach ( $dev_card_skill_groups as $group => $skills ) : ?>
-					<div class="col-md-6 col-lg-4">
-						<section class="card card-dev h-100">
+					<?php $is_core = ( array_key_first( $dev_card_skill_groups ) === $group ); ?>
+					<div class="<?php echo esc_attr( $is_core ? 'col-12' : 'col-md-6 col-lg-4' ); ?>">
+						<section class="card card-dev h-100<?php echo $is_core ? ' skill-group--core' : ''; ?>">
 							<div class="card-body p-4">
 								<h2 class="h5 skill-group__title"><?php echo esc_html( $group ); ?></h2>
 
-								<?php foreach ( $skills as $name => $level ) : ?>
-									<div class="skill">
-										<div class="skill__head">
-											<span><?php echo esc_html( $name ); ?></span>
-											<span class="skill__level"><?php echo esc_html( $level ); ?>%</span>
-										</div>
-										<div class="progress skill__bar" role="progressbar" aria-label="<?php echo esc_attr( $name ); ?>" aria-valuenow="<?php echo esc_attr( $level ); ?>" aria-valuemin="0" aria-valuemax="100">
-											<div class="progress-bar" style="width: <?php echo esc_attr( $level ); ?>%"></div>
-										</div>
-									</div>
-								<?php endforeach; ?>
+								<ul class="skill-tags">
+									<?php foreach ( $skills as $skill ) : ?>
+										<li class="skill-tag"><?php echo esc_html( $skill ); ?></li>
+									<?php endforeach; ?>
+								</ul>
 							</div>
 						</section>
 					</div>

@@ -9,21 +9,17 @@ get_header();
 
 // Temporary hardcoded data. Will be moved to the admin panel in step 7.
 $dev_card_email    = 'hello@example.com';
+$dev_card_location = 'Krakow, Poland';
 $dev_card_contacts = array(
+	array(
+		'label' => 'LinkedIn',
+		'value' => 'linkedin.com/in/maksym-lutsenko',
+		'url'   => 'https://linkedin.com/in/maksym-lutsenko',
+	),
 	array(
 		'label' => 'GitHub',
 		'value' => 'github.com/LutsenkoM',
 		'url'   => 'https://github.com/LutsenkoM',
-	),
-	array(
-		'label' => 'LinkedIn',
-		'value' => 'linkedin.com/in/your-profile',
-		'url'   => 'https://www.linkedin.com/in/your-profile',
-	),
-	array(
-		'label' => 'Telegram',
-		'value' => '@your_username',
-		'url'   => 'https://t.me/your_username',
 	),
 );
 
@@ -58,6 +54,10 @@ while ( have_posts() ) :
 								<a href="<?php echo esc_url( $contact['url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $contact['value'] ); ?></a>
 							</li>
 						<?php endforeach; ?>
+						<li>
+							<span class="contact-list__label">Location</span>
+							<span class="contact-list__value"><?php echo esc_html( $dev_card_location ); ?></span>
+						</li>
 					</ul>
 				</div>
 
