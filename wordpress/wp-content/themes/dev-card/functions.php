@@ -146,3 +146,8 @@ function dev_card_page_url( $slug ) {
 
 	return $page ? get_permalink( $page ) : home_url( '/' );
 }
+
+/**
+ * Theme modules.
+ */
+require get_template_directory() . '/inc/customizer.php';

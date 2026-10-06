@@ -7,20 +7,15 @@
 
 get_header();
 
-// Temporary hardcoded data. Will be moved to the admin panel in step 7.
-$dev_card_email    = 'hello@example.com';
-$dev_card_location = 'Krakow, Poland';
-$dev_card_contacts = array(
-	array(
-		'label' => 'LinkedIn',
-		'value' => 'linkedin.com/in/maksym-lutsenko',
-		'url'   => 'https://linkedin.com/in/maksym-lutsenko',
-	),
-	array(
-		'label' => 'GitHub',
-		'value' => 'github.com/LutsenkoM',
-		'url'   => 'https://github.com/LutsenkoM',
-	),
+// Contact data comes from Appearance -> Customize -> Contacts (see inc/customizer.php).
+$dev_card_email    = dev_card_get_contact( 'email' );
+$dev_card_phone    = dev_card_get_contact( 'phone' );
+$dev_card_location = dev_card_get_contact( 'location' );
+
+// Link-type contacts: label => URL. Empty values are skipped below.
+$dev_card_links = array(
+	'LinkedIn' => dev_card_get_contact( 'linkedin' ),
+	'Telegram' => dev_card_get_contact( 'telegram' ),
 );
 
 while ( have_posts() ) :
@@ -38,26 +33,39 @@ while ( have_posts() ) :
 					</div>
 
 					<ul class="contact-list">
-						<li>
-							<span class="contact-list__label">Email</span>
-							<?php
-							// antispambot() encodes the address into HTML entities to confuse spam bots.
-							// Its output is already safe for HTML, and esc_url() would break the entities,
-							// so we sanitize the email before encoding instead of escaping after.
-							$dev_card_email_encoded = antispambot( sanitize_email( $dev_card_email ) );
-							?>
-							<a href="mailto:<?php echo $dev_card_email_encoded; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"><?php echo $dev_card_email_encoded; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
-						</li>
-						<?php foreach ( $dev_card_contacts as $contact ) : ?>
+						<?php if ( $dev_card_email ) : ?>
 							<li>
-								<span class="contact-list__label"><?php echo esc_html( $contact['label'] ); ?></span>
-								<a href="<?php echo esc_url( $contact['url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $contact['value'] ); ?></a>
+								<span class="contact-list__label">Email</span>
+								<?php
+								// antispambot() encodes the address into HTML entities to confuse spam bots.
+								// Its output is already safe for HTML, and esc_url() would break the entities.
+								// The value was sanitized with sanitize_email() when saved in the Customizer.
+								$dev_card_email_encoded = antispambot( $dev_card_email );
+								?>
+								<a href="mailto:<?php echo $dev_card_email_encoded; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"><?php echo $dev_card_email_encoded; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+							</li>
+						<?php endif; ?>
+
+						<?php if ( $dev_card_phone ) : ?>
+							<li>
+								<span class="contact-list__label">Phone</span>
+								<a href="<?php echo esc_url( 'tel:' . dev_card_phone_href( $dev_card_phone ) ); ?>"><?php echo esc_html( $dev_card_phone ); ?></a>
+							</li>
+						<?php endif; ?>
+
+						<?php foreach ( array_filter( $dev_card_links ) as $label => $url ) : ?>
+							<li>
+								<span class="contact-list__label"><?php echo esc_html( $label ); ?></span>
+								<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( dev_card_pretty_url( $url ) ); ?></a>
 							</li>
 						<?php endforeach; ?>
-						<li>
-							<span class="contact-list__label">Location</span>
-							<span class="contact-list__value"><?php echo esc_html( $dev_card_location ); ?></span>
-						</li>
+
+						<?php if ( $dev_card_location ) : ?>
+							<li>
+								<span class="contact-list__label">Location</span>
+								<span class="contact-list__value"><?php echo esc_html( $dev_card_location ); ?></span>
+							</li>
+						<?php endif; ?>
 					</ul>
 				</div>
 
