@@ -739,3 +739,48 @@ a {
 	letter-spacing: 0.08em;
 	color: var(--dc-accent);
 }
+
+/* ==========================================================================
+   14. Contact form
+   ========================================================================== */
+
+.contact-form .form-label {
+	font-family: var(--dc-font-mono);
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--dc-text-muted);
+}
+
+.contact-form .form-control {
+	padding: 0.75rem 1rem;
+	border-color: var(--dc-border);
+	background: var(--dc-bg);
+	color: var(--dc-text);
+}
+
+.contact-form .form-control:focus {
+	border-color: var(--dc-accent);
+	box-shadow: 0 0 0 0.2rem rgba(var(--dc-accent-rgb), 0.2);
+}
+
+/* Honeypot: off-screen instead of display:none — some bots skip hidden fields. */
+.contact-form__hp {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.alert-success {
+	--bs-alert-color: #c9f7d5;
+	--bs-alert-bg: rgba(46, 160, 67, 0.15);
+	--bs-alert-border-color: rgba(46, 160, 67, 0.4);
+}
+
+.alert-danger {
+	--bs-alert-color: #ffd1cc;
+	--bs-alert-bg: rgba(248, 81, 73, 0.15);
+	--bs-alert-border-color: rgba(248, 81, 73, 0.4);
+}
