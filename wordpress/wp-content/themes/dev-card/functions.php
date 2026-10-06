@@ -152,4 +152,5 @@ function dev_card_page_url( $slug ) {
  */
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/post-types.php';
+require get_template_directory() . '/inc/meta-boxes.php';
 require get_template_directory() . '/inc/template-tags.php';
