@@ -39,6 +39,14 @@ function dev_card_setup() {
 			'flex-width'  => true,
 		)
 	);
+
+	// Register menu locations. Menus are assigned to them in Appearance -> Menus.
+	register_nav_menus(
+		array(
+			'primary' => 'Primary Menu',
+			'footer'  => 'Footer Menu',
+		)
+	);
 }
 add_action( 'after_setup_theme', 'dev_card_setup' );
 
@@ -46,13 +54,80 @@ add_action( 'after_setup_theme', 'dev_card_setup' );
  * Enqueue theme styles and scripts.
  */
 function dev_card_enqueue_assets() {
-	$theme_version = wp_get_theme()->get( 'Version' );
+	$theme_uri       = get_template_directory_uri();
+	$theme_dir       = get_template_directory();
+	$bootstrap_ver   = '5.3.8';
+	$main_css_path   = '/assets/css/main.css';
 
+	// Google Fonts: Inter for text, JetBrains Mono for "code" accents.
 	wp_enqueue_style(
-		'dev-card-style',       // Unique handle.
-		get_stylesheet_uri(),   // URL of the theme's style.css.
-		array(),                // Dependencies.
-		$theme_version          // Version for cache busting (?ver=0.1.0).
+		'dev-card-fonts',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap',
+		array(),
+		null // No ?ver= — Google Fonts URLs must stay as is.
+	);
+
+	// Bootstrap CSS (bundled locally in the theme).
+	wp_enqueue_style(
+		'bootstrap',
+		$theme_uri . '/assets/vendor/bootstrap/bootstrap.min.css',
+		array(),
+		$bootstrap_ver
+	);
+
+	// Theme styles. Depend on Bootstrap so they load after it and can override it.
+	// filemtime() changes the version on every file save, so the browser never serves a stale copy.
+	wp_enqueue_style(
+		'dev-card-main',
+		$theme_uri . $main_css_path,
+		array( 'bootstrap', 'dev-card-fonts' ),
+		filemtime( $theme_dir . $main_css_path )
+	);
+
+	// Bootstrap JS bundle (includes Popper). Needed for the mobile navbar toggle.
+	wp_enqueue_script(
+		'bootstrap',
+		$theme_uri . '/assets/vendor/bootstrap/bootstrap.bundle.min.js',
+		array(),
+		$bootstrap_ver,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
 	);
 }
 add_action( 'wp_enqueue_scripts', 'dev_card_enqueue_assets' );
+
+/**
+ * Add Bootstrap's `nav-item` class to menu <li> elements.
+ *
+ * @param string[] $classes CSS classes of the menu item.
+ * @param WP_Post  $item    Menu item object.
+ * @param stdClass $args    wp_nav_menu() arguments.
+ * @return string[]
+ */
+function dev_card_nav_menu_item_class( $classes, $item, $args ) {
+	if ( in_array( $args->theme_location, array( 'primary', 'footer' ), true ) ) {
+		$classes[] = 'nav-item';
+	}
+
+	return $classes;
+}
+add_filter( 'nav_menu_css_class', 'dev_card_nav_menu_item_class', 10, 3 );
+
+/**
+ * Add Bootstrap's `nav-link` (and `active`) classes to menu links.
+ *
+ * @param array    $atts HTML attributes of the <a> tag.
+ * @param WP_Post  $item Menu item object.
+ * @param stdClass $args wp_nav_menu() arguments.
+ * @return array
+ */
+function dev_card_nav_menu_link_attributes( $atts, $item, $args ) {
+	if ( in_array( $args->theme_location, array( 'primary', 'footer' ), true ) ) {
+		$atts['class'] = 'nav-link' . ( $item->current ? ' active' : '' );
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'dev_card_nav_menu_link_attributes', 10, 3 );

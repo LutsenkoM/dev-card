@@ -9,15 +9,21 @@
 get_header();
 ?>
 
-<?php if ( have_posts() ) : ?>
-	<?php while ( have_posts() ) : the_post(); ?>
-		<?php get_template_part( 'template-parts/content' ); ?>
-	<?php endwhile; ?>
+<div class="container py-5">
+	<?php if ( have_posts() ) : ?>
+		<div class="row g-4">
+			<?php while ( have_posts() ) : the_post(); ?>
+				<div class="col-md-6 col-lg-4">
+					<?php get_template_part( 'template-parts/content' ); ?>
+				</div>
+			<?php endwhile; ?>
+		</div>
 
-	<?php the_posts_pagination(); ?>
-<?php else : ?>
-	<p>Nothing found.</p>
-<?php endif; ?>
+		<?php the_posts_pagination( array( 'class' => 'mt-5' ) ); ?>
+	<?php else : ?>
+		<p>Nothing found.</p>
+	<?php endif; ?>
+</div>
 
 <?php
 get_footer();

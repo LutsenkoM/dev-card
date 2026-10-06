@@ -1,0 +1,422 @@
+/**
+ * Dev Card — main theme styles.
+ * Loaded after Bootstrap, so everything here can override it.
+ */
+
+/* ==========================================================================
+   1. Design tokens
+   ========================================================================== */
+
+:root {
+	--dc-bg: #0b0b0c;
+	--dc-surface: #141416;
+	--dc-surface-2: #1c1c1f;
+	--dc-border: #2a2a2e;
+	--dc-text: #e9e9ec;
+	--dc-text-muted: #9a9aa3;
+	--dc-accent: #ff7a00;
+	--dc-accent-hover: #ff9533;
+	--dc-accent-rgb: 255, 122, 0;
+	--dc-font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--dc-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	--dc-radius: 0.75rem;
+	--dc-header-height: 72px;
+}
+
+/* Map our tokens onto Bootstrap's dark theme variables. */
+[data-bs-theme="dark"] {
+	--bs-body-bg: var(--dc-bg);
+	--bs-body-color: var(--dc-text);
+	--bs-body-font-family: var(--dc-font-sans);
+	--bs-secondary-color: var(--dc-text-muted);
+	--bs-border-color: var(--dc-border);
+	--bs-primary: var(--dc-accent);
+	--bs-primary-rgb: var(--dc-accent-rgb);
+	--bs-link-color: var(--dc-accent);
+	--bs-link-color-rgb: var(--dc-accent-rgb);
+	--bs-link-hover-color: var(--dc-accent-hover);
+	--bs-link-hover-color-rgb: 255, 149, 51;
+	--bs-emphasis-color: #fff;
+	--bs-code-color: var(--dc-accent);
+	--bs-border-radius: var(--dc-radius);
+	--bs-focus-ring-color: rgba(var(--dc-accent-rgb), 0.35);
+}
+
+/* ==========================================================================
+   2. Base
+   ========================================================================== */
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+}
+
+.site-main {
+	flex: 1 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: var(--bs-emphasis-color);
+}
+
+a {
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+::selection {
+	background: var(--dc-accent);
+	color: #000;
+}
+
+.text-accent {
+	color: var(--dc-accent) !important;
+}
+
+/* ==========================================================================
+   3. Buttons (Bootstrap compiles colors into each button, so override per button)
+   ========================================================================== */
+
+.btn {
+	font-weight: 600;
+	border-radius: 999px;
+	padding-inline: 1.5rem;
+}
+
+.btn-primary {
+	--bs-btn-color: #000;
+	--bs-btn-bg: var(--dc-accent);
+	--bs-btn-border-color: var(--dc-accent);
+	--bs-btn-hover-color: #000;
+	--bs-btn-hover-bg: var(--dc-accent-hover);
+	--bs-btn-hover-border-color: var(--dc-accent-hover);
+	--bs-btn-active-color: #000;
+	--bs-btn-active-bg: var(--dc-accent-hover);
+	--bs-btn-active-border-color: var(--dc-accent-hover);
+	--bs-btn-focus-shadow-rgb: var(--dc-accent-rgb);
+	box-shadow: 0 0 0 0 rgba(var(--dc-accent-rgb), 0);
+	transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+	box-shadow: 0 8px 24px -8px rgba(var(--dc-accent-rgb), 0.6);
+	transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+	--bs-btn-color: var(--dc-accent);
+	--bs-btn-border-color: var(--dc-accent);
+	--bs-btn-hover-color: #000;
+	--bs-btn-hover-bg: var(--dc-accent);
+	--bs-btn-hover-border-color: var(--dc-accent);
+	--bs-btn-active-color: #000;
+	--bs-btn-active-bg: var(--dc-accent);
+	--bs-btn-active-border-color: var(--dc-accent);
+	--bs-btn-focus-shadow-rgb: var(--dc-accent-rgb);
+}
+
+/* ==========================================================================
+   4. Header & navigation
+   ========================================================================== */
+
+.site-header {
+	background: rgba(11, 11, 12, 0.8);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-bottom: 1px solid var(--dc-border);
+}
+
+/* Keep the sticky header below the WordPress admin bar when logged in. */
+.admin-bar .site-header {
+	top: 32px;
+}
+
+@media (max-width: 782px) {
+	.admin-bar .site-header {
+		top: 46px;
+	}
+}
+
+.site-header .navbar {
+	min-height: var(--dc-header-height);
+}
+
+.site-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-weight: 800;
+	color: var(--bs-emphasis-color);
+}
+
+.site-brand:hover {
+	color: var(--bs-emphasis-color);
+}
+
+.site-brand__mark {
+	display: inline-grid;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 0.6rem;
+	background: var(--dc-accent);
+	color: #000;
+	font-family: var(--dc-font-mono);
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+
+.site-brand__logo {
+	max-height: 2.25rem;
+	width: auto;
+}
+
+.site-nav__list .nav-link {
+	position: relative;
+	padding-inline: 0.9rem !important;
+	font-weight: 500;
+	color: var(--dc-text-muted);
+}
+
+.site-nav__list .nav-link:hover,
+.site-nav__list .nav-link.active {
+	color: var(--bs-emphasis-color);
+}
+
+/* Orange underline for the current page (desktop). */
+@media (min-width: 768px) {
+	.site-nav__list .nav-link::after {
+		content: "";
+		position: absolute;
+		left: 0.9rem;
+		right: 0.9rem;
+		bottom: 0.15rem;
+		height: 2px;
+		background: var(--dc-accent);
+		border-radius: 2px;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.25s ease;
+	}
+
+	.site-nav__list .nav-link:hover::after,
+	.site-nav__list .nav-link.active::after {
+		transform: scaleX(1);
+	}
+}
+
+.navbar-toggler {
+	border-color: var(--dc-border);
+}
+
+.navbar-toggler:focus {
+	box-shadow: 0 0 0 0.2rem rgba(var(--dc-accent-rgb), 0.35);
+}
+
+/* ==========================================================================
+   5. Page hero (title area of pages)
+   ========================================================================== */
+
+.page-hero {
+	position: relative;
+	padding: 5rem 0 3.5rem;
+	overflow: hidden;
+	border-bottom: 1px solid var(--dc-border);
+	background:
+		radial-gradient(600px circle at 85% 0%, rgba(var(--dc-accent-rgb), 0.18), transparent 60%),
+		linear-gradient(var(--dc-border) 1px, transparent 1px) 0 0 / 40px 40px,
+		linear-gradient(90deg, var(--dc-border) 1px, transparent 1px) 0 0 / 40px 40px;
+	background-color: var(--dc-bg);
+}
+
+/* Fade the grid out towards the bottom. */
+.page-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to bottom, transparent 30%, var(--dc-bg));
+	pointer-events: none;
+}
+
+.page-hero .container {
+	position: relative;
+	z-index: 1;
+}
+
+.page-hero__path {
+	margin-bottom: 0.75rem;
+	font-family: var(--dc-font-mono);
+	font-size: 0.9rem;
+	color: var(--dc-accent);
+}
+
+.page-hero__title {
+	margin: 0;
+	font-size: clamp(2.5rem, 6vw, 4.5rem);
+	font-weight: 800;
+	line-height: 1.05;
+}
+
+/* ==========================================================================
+   6. Page content (output of the_content())
+   ========================================================================== */
+
+.entry-content {
+	max-width: 760px;
+	font-size: 1.075rem;
+	line-height: 1.75;
+	color: var(--dc-text);
+}
+
+.entry-content > * + * {
+	margin-top: 1.25rem;
+}
+
+.entry-content h2 {
+	margin-top: 3rem;
+	font-size: 1.75rem;
+}
+
+.entry-content h3 {
+	margin-top: 2rem;
+	font-size: 1.35rem;
+}
+
+.entry-content ul li::marker {
+	color: var(--dc-accent);
+}
+
+.entry-content blockquote {
+	padding: 1rem 1.5rem;
+	border-left: 3px solid var(--dc-accent);
+	background: var(--dc-surface);
+	border-radius: 0 var(--dc-radius) var(--dc-radius) 0;
+}
+
+.entry-content code {
+	padding: 0.15em 0.4em;
+	border-radius: 0.35rem;
+	background: var(--dc-surface-2);
+	font-family: var(--dc-font-mono);
+	font-size: 0.9em;
+}
+
+.entry-content pre {
+	padding: 1.25rem;
+	border: 1px solid var(--dc-border);
+	border-radius: var(--dc-radius);
+	background: var(--dc-surface);
+}
+
+.entry-content pre code {
+	padding: 0;
+	background: none;
+}
+
+.entry-content img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--dc-radius);
+}
+
+/* ==========================================================================
+   7. Cards (post lists)
+   ========================================================================== */
+
+.card-dev {
+	background: var(--dc-surface);
+	border: 1px solid var(--dc-border);
+	border-radius: var(--dc-radius);
+	transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.card-dev:hover {
+	border-color: rgba(var(--dc-accent-rgb), 0.6);
+	transform: translateY(-3px);
+}
+
+.card-dev .card-title a {
+	color: var(--bs-emphasis-color);
+}
+
+.card-dev__meta {
+	margin-bottom: 0.5rem;
+	font-family: var(--dc-font-mono);
+	font-size: 0.8rem;
+	color: var(--dc-accent);
+}
+
+/* Pagination from the_posts_pagination(). */
+.nav-links {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+}
+
+.nav-links .page-numbers {
+	display: inline-grid;
+	place-items: center;
+	min-width: 2.5rem;
+	height: 2.5rem;
+	padding: 0 0.75rem;
+	border: 1px solid var(--dc-border);
+	border-radius: 999px;
+	color: var(--dc-text);
+}
+
+.nav-links .page-numbers.current,
+.nav-links .page-numbers:hover {
+	border-color: var(--dc-accent);
+	color: var(--dc-accent);
+}
+
+/* ==========================================================================
+   8. 404
+   ========================================================================== */
+
+.error-404 {
+	padding-block: 6rem !important;
+}
+
+.error-404__code {
+	margin-bottom: 0.5rem;
+	font-family: var(--dc-font-mono);
+	font-size: clamp(5rem, 18vw, 9rem);
+	font-weight: 600;
+	line-height: 1;
+	color: var(--dc-accent);
+	text-shadow: 0 0 60px rgba(var(--dc-accent-rgb), 0.35);
+}
+
+/* ==========================================================================
+   9. Footer
+   ========================================================================== */
+
+.site-footer {
+	border-top: 1px solid var(--dc-border);
+	background: var(--dc-surface);
+	font-size: 0.9rem;
+}
+
+.site-footer__copy {
+	color: var(--dc-text-muted);
+}
+
+.site-footer__sep {
+	margin-inline: 0.35rem;
+	color: var(--dc-accent);
+}
+
+.footer-nav__list .nav-link {
+	padding: 0.25rem 0.75rem;
+	color: var(--dc-text-muted);
+}
+
+.footer-nav__list .nav-link:hover,
+.footer-nav__list .nav-link.active {
+	color: var(--dc-accent);
+}

@@ -11,13 +11,4 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  dev-card
 */
 
-/* Temporary check that style.css is loaded. Real styles come in step 6. */
-body {
-	background: #0d0d0d;
-	color: #f2f2f2;
-	font-family: system-ui, sans-serif;
-}
-
-a {
-	color: #ff7a00;
-}
+/* Theme styles live in assets/css/main.css. This file only holds the theme header. */
