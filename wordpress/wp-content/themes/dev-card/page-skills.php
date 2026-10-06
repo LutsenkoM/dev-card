@@ -7,17 +7,9 @@
 
 get_header();
 
-// Temporary hardcoded data. Will be moved to the admin panel in step 7.
-// Format: group => list of skills. The first group is highlighted as the core stack.
-$dev_card_skill_groups = array(
-	'Core'                 => array( 'React', 'TypeScript', 'JavaScript (ES6+)', 'Next.js (App Router)', 'HTML5', 'CSS3' ),
-	'Data & State'         => array( 'GraphQL (Apollo Client)', 'REST', 'WebSocket', 'SignalR', 'Redux Toolkit', 'React Query', 'Zustand', 'React Hook Form', 'Caching strategies' ),
-	'UI & Accessibility'   => array( 'Tailwind CSS', 'Material UI', 'SASS', 'CSS Grid & Flexbox', 'Design systems', 'Responsive layouts', 'Semantic HTML', 'ARIA', 'WCAG' ),
-	'Testing & Tooling'    => array( 'Jest', 'React Testing Library', 'Cypress', 'Vite', 'webpack', 'Turbo', 'pnpm monorepo', 'Storybook', 'ESLint', 'Prettier' ),
-	'AI Tools'             => array( 'Claude Code', 'GitHub Copilot', 'Codex' ),
-	'Cloud & Workflow'     => array( 'GCP', 'Firebase', 'Git (GitLab / Bitbucket / GitHub)', 'Azure DevOps', 'Jira', 'Figma', 'Agile / Scrum', 'Code review' ),
-	'Also'                 => array( 'Angular / AngularJS', 'Node.js', 'WordPress', 'Drupal' ),
-);
+// Skills are managed in the admin: Skills -> All Skills / Groups (see inc/post-types.php).
+// The first group is highlighted as the core stack.
+$dev_card_skill_groups = dev_card_get_skills_by_group();
 
 while ( have_posts() ) :
 	the_post();
